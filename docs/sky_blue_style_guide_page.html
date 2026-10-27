@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sky Blue Signature – Style Guide Page</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;600;700&display=swap');
+:root{--bg:#EEF6FF;--card:#FFFFFF;--text:#0B2545;--muted:#5C7391;--p1:#1E90FF;--p2:#5B8CFF;--ok:#12B886;--bad:#F76707;--line:#D4E4F7;--radius:26px;--glow:0 12px 28px rgba(30,144,255,.40);--font-head:'Bricolage Grotesque',system-ui,sans-serif;--font-body:'Figtree',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.55}
+h1,h2,h3{font-family:var(--font-head);line-height:1.1}
+.wrap{max-width:960px;margin:0 auto;padding:48px 24px 64px}
+header{margin-bottom:32px}
+header h1{font-size:clamp(2rem,6vw,3rem);font-weight:800;margin-bottom:8px}
+header p{color:var(--muted)}
+section{margin-bottom:24px}
+section>h2{font-size:1.4rem;font-weight:700;margin:0 0 8px}
+section>p{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:32px;padding:24px}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.note{font-size:.85rem;color:var(--muted);margin-top:16px}
+/* colors */
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.sw div{border:1px solid var(--line);border-radius:20px;overflow:hidden;font-size:.85rem}
+.sw i{display:block;height:72px;border-bottom:1px solid var(--line)}
+.sw b{display:block;padding:8px 12px 0}
+.sw span{display:block;padding:0 12px 8px;color:var(--muted)}
+/* fonts */
+.f1{font-family:var(--font-head);font-weight:800;font-size:2.6rem;line-height:1.1}
+.f2{font-family:var(--font-head);font-weight:700;font-size:2rem}
+.f3{font-family:var(--font-head);font-weight:500;font-size:1.4rem}
+.small{font-size:.85rem;color:var(--muted)}
+/* buttons */
+.btn{font:700 1rem var(--font-body);border-radius:var(--radius);padding:14px 24px;cursor:pointer;border:2px solid transparent;position:relative;overflow:hidden;transition:transform .2s,box-shadow .25s,background .25s}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--p1);outline-offset:3px}
+.primary{color:#fff;background:linear-gradient(135deg,var(--p1),var(--p2))}
+.primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s}
+.primary:hover{transform:translateY(-3px);box-shadow:var(--glow)}
+.primary:hover::after{transform:translateX(120%)}
+.primary:active{transform:scale(.97)}
+.secondary{color:var(--p1);border-color:var(--p1);background:transparent}
+.secondary:hover{background:rgba(30,144,255,.14)}
+.textbtn{color:var(--text);background:transparent;padding-inline:8px;background-image:linear-gradient(var(--p1),var(--p1));background-size:0 3px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .3s}
+.textbtn:hover{background-size:100% 3px}
+.vote{color:var(--text);background:rgba(30,144,255,.14);border-color:rgba(30,144,255,.45)}
+.vote:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.vote.on{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--p1),var(--p2))}
+/* markers and tags */
+.line{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font:800 1.15rem var(--font-head);color:#fff;background:linear-gradient(135deg,var(--p1),var(--p2))}
+.line.done{background:var(--line);color:var(--muted)}
+.chip{font:700 .8rem var(--font-body);padding:5px 12px;border-radius:999px;color:var(--bad);background:rgba(247,103,7,.16)}
+.chip.ok{color:var(--ok);background:rgba(18,184,134,.16)}
+.live{width:10px;height:10px;border-radius:50%;background:var(--bad);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(247,103,7,.65)}100%{box-shadow:0 0 0 14px rgba(247,103,7,0)}}
+.item{display:flex;align-items:center;gap:16px}
+.item b{display:block}
+/* form */
+label{display:block;font-weight:700;font-size:.9rem;margin:16px 0 8px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--radius);padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--p1);outline:none;box-shadow:0 0 0 4px rgba(30,144,255,.22)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+/* spacing */
+.sp{display:flex;align-items:center;gap:16px;margin-bottom:8px;font-size:.85rem}
+.sp i{display:block;height:16px;background:var(--p1);border-radius:4px}
+.sp span{width:48px;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Sky Blue Signature</h1>
+    <p>Team Sky Blue | Group 4 | Style guide, shown as a real page. Move your mouse over the buttons and click inside the fields.</p>
+  </header>
+
+  <section>
+    <h2>1. Colors</h2>
+    <p>Active delays are always orange. Resolved reports are always green. No red.</p>
+    <div class="card"><div class="sw">
+      <div><i style="background:#EEF6FF"></i><b>Background</b><span>#EEF6FF</span></div>
+      <div><i style="background:#FFFFFF"></i><b>Card</b><span>#FFFFFF</span></div>
+      <div><i style="background:#0B2545"></i><b>Text (navy)</b><span>#0B2545</span></div>
+      <div><i style="background:#5C7391"></i><b>Muted text</b><span>#5C7391</span></div>
+      <div><i style="background:#1E90FF"></i><b>Main blue</b><span>#1E90FF</span></div>
+      <div><i style="background:#5B8CFF"></i><b>Second blue</b><span>#5B8CFF</span></div>
+      <div><i style="background:#12B886"></i><b>Resolved green</b><span>#12B886</span></div>
+      <div><i style="background:#F76707"></i><b>Delay orange</b><span>#F76707</span></div>
+      <div><i style="background:#D4E4F7"></i><b>Border</b><span>#D4E4F7</span></div>
+      <div><i style="background:linear-gradient(135deg,#1E90FF,#5B8CFF)"></i><b>Button gradient</b><span>#1E90FF to #5B8CFF</span></div>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>2. Fonts</h2>
+    <p>Headings and numbers: Bricolage Grotesque. Body text, buttons and forms: Figtree.</p>
+    <div class="card">
+      <div class="f1">Know before you go</div>
+      <div class="f2" style="margin-top:8px">Delays on your line</div>
+      <div class="f3" style="margin-top:8px">Bricolage Grotesque 500, 700, 800</div>
+      <p style="margin-top:16px">Body text in Figtree, 16 px. Riders report problems on their line, other riders confirm them, and everyone sees what is happening right now.</p>
+      <p class="small" style="margin-top:8px">Small note in Figtree, about 14 px: reported 4 minutes ago.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Buttons</h2>
+    <p>Corners 26 px, bold text, padding 14 px by 24 px. One primary button per area.</p>
+    <div class="card">
+      <div class="row">
+        <button class="btn primary">Report a delay</button>
+        <button class="btn secondary">View live feed</button>
+        <button class="btn textbtn">Moderator login</button>
+        <button class="btn vote" id="vote">Still happening <span id="n">12</span></button>
+      </div>
+      <p class="note">Primary: moves up 3 px, glows and shines on hover, gets smaller when pressed. Still happening: click it to see it turn into the blue gradient.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Line marker, status tags and live dot</h2>
+    <p>Round line marker (42 px), pill tags, and the pulsing orange dot for anything live.</p>
+    <div class="card">
+      <div class="item"><div class="line">2</div><div><b>Delayed at Main Street</b><span class="small">Reported 4 min ago</span></div><span class="chip" style="margin-left:auto">Active</span></div>
+      <div class="item" style="margin-top:16px"><div class="line done">1</div><div><b>Signal problem at Bloor</b><span class="small">Cleared 20 min ago</span></div><span class="chip ok" style="margin-left:auto">Resolved</span></div>
+      <div class="item" style="margin-top:24px"><span class="live"></span><span>Live now</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Cards and form fields</h2>
+    <p>Cards: white, 1 px border, corners 32 px, padding 24 px. Fields: corners 26 px, blue ring when you click inside.</p>
+    <div class="two">
+      <div class="card"><h3 style="font-size:1.2rem;margin-bottom:8px">A card</h3><p class="small">White background, thin border and round corners. Use cards to group things on a page.</p></div>
+      <div class="card">
+        <label for="l">Line</label><select id="l"><option>Line 1</option><option>Line 2</option><option>Line 3</option><option>Line 4</option></select>
+        <label for="s">Station</label><input id="s" placeholder="Main Street">
+        <label for="d">What happened?</label><textarea id="d" rows="2" placeholder="Train stopped between stations"></textarea>
+        <button class="btn primary" style="width:100%;margin-top:24px">Send report</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Spacing</h2>
+    <p>Use steps of 8 px.</p>
+    <div class="card">
+      <div class="sp"><span>8 px</span><i style="width:8px"></i></div>
+      <div class="sp"><span>16 px</span><i style="width:16px"></i></div>
+      <div class="sp"><span>24 px</span><i style="width:24px"></i></div>
+      <div class="sp"><span>32 px</span><i style="width:32px"></i></div>
+      <div class="sp" style="margin-bottom:0"><span>48 px</span><i style="width:48px"></i></div>
+    </div>
+  </section>
+</div>
+<script>
+const v=document.getElementById('vote'),n=document.getElementById('n');
+v.onclick=()=>{const on=v.classList.toggle('on');n.textContent=on?13:12};
+</script>
+</body>
+</html>
