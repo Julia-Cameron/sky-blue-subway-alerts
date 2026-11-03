@@ -14,10 +14,10 @@ const signinToken = (user) => {
     );
 };
 
-// Function to Return Public Data to the Client
+// Function to Return Public Data to the Client 
 const toPublicUser = (user) => ({
     id: user._id,
-    displayName: user.displayName,
+    name: user.name,
     email: user.email,
     role: user.role,
 });
@@ -25,10 +25,10 @@ const toPublicUser = (user) => ({
 // POST /api/auth/signup
 exports.signup = async (req, res) => {
     try {
-        const { email, displayName, password } = req.body;
+        const { email, name, password } = req.body;
 
         // Validate all fields
-        if (!email || !displayName || !password) {
+        if (!email || !name || !password) {
             return res.status(400).json({ message: 'All fields are required!' });
         }
 
@@ -49,14 +49,14 @@ exports.signup = async (req, res) => {
         }
 
         // Hash the Password
-        const passwordHash = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Save User
+        // Save User (Matched SB-14 schema fields: name, password, role)
         const saveUser = await User.create({
             email: email.toLowerCase().trim(),
-            displayName,
-            passwordHash,
-            role: 'commuter'
+            name,
+            password: hashedPassword,
+            role: 'commuter' 
         });
 
         return res.status(201).json({
@@ -70,7 +70,6 @@ exports.signup = async (req, res) => {
         }
 
         console.error('signup error:', err);
-        // Temporary: remove "error: err.message" before you submit
         return res.status(500).json({ message: 'Something went wrong. Please try again', error: err.message });
     }
 };
@@ -85,12 +84,13 @@ exports.signin = async (req, res) => {
             return res.status(400).json({ message: 'Email and password are required!' });
         }
 
-        const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+passwordHash');
+        // Explicitly select password since select: false is set in the SB-14 User schema
+        const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
         const invalid = { message: 'Invalid email or password' };
 
         if (!user) return res.status(401).json(invalid);
 
-        const matches = await bcrypt.compare(password, user.passwordHash);
+        const matches = await bcrypt.compare(password, user.password);
         if (!matches) return res.status(401).json(invalid);
 
         return res.status(200).json({

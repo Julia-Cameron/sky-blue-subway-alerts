@@ -5,6 +5,7 @@ const cors = require('cors');
 
 
 const authRoutes = require('./routes/auth');
+const userRoutes = require ('./routes/user')
 const reportRoutes = require('./routes/report');
 
 // 1. Load environment variables from .env file
@@ -14,12 +15,13 @@ dotenv.config();
 const app = express();
 
 // 2. Middleware
-app.use(express.json()); // Parses incoming JSON payloads from req.body
-app.use(cors());         // Enables Cross-Origin Resource Sharing for frontend communication
+app.use(express.json()); 
+app.use(cors());         
 
 // 3. Mount Routes 
 app.use('/api/auth', authRoutes);
-//app.use('/api/reports', reportRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Basic root test route
 app.get('/', (req, res) => {

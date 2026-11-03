@@ -1,158 +1,136 @@
-const { Report, Vote } = require('../models');
+const Report = require('../models/Report');
+const Station = require('../models/Station');
+const Line = require('../models/Line');
 
-// ==========================================
-// 1. GET LIVE FEED (Active Reports)
-// ==========================================
-exports.getLiveFeed = async (req, res) => {
-  try {
-    // Utilizes the compound index: { status: 1, createdAt: -1 }
-    const activeReports = await Report.find({ status: 'active' })
-      .sort({ createdAt: -1 })
-      .populate('routeId', 'code name mode color')
-      .populate('stopId', 'name location')
-      .populate('reportedBy', 'displayName');
-
-    res.status(200).json({
-      success: true,
-      count: activeReports.length,
-      data: activeReports
-    });
-  } catch (err) {
-    console.error('getLiveFeed error:', err);
-    res.status(500).json({ message: 'Something went wrong. Please try again.' });
-  }
-};
-
-// ==========================================
-// 2. CREATE A NEW INCIDENT REPORT
-// ==========================================
-exports.createReport = async (req, res) => {
-  try {
-    const { routeId, stopId, direction, reason, note } = req.body;
-
-    // Validate required fields
-    if (!routeId || !reason) {
-      return res.status(400).json({ message: 'Route and reason are required fields.' });
-    }
-
-    // Create the report, linking it to the authenticated user (req.user.id)
-    const newReport = await Report.create({
-      reportedBy: req.user.id,
-      routeId,
-      stopId: stopId || undefined,
-      direction,
-      reason,
-      note: note ? note.trim() : undefined,
-      status: 'active',
-      votesCount: 1, // Author's initial automatic confirmation vote
-      lastActivityAt: Date.now()
-    });
-
-    // Automatically create a matching initial "still" vote for the creator
+// GET /api/reports - Get active transit reports (newest first)
+exports.getReports = async (req, res) => {
     try {
-      await Vote.create({
-        reportId: newReport._id,
-        userId: req.user.id,
-        type: 'still'
-      });
-    } catch (voteErr) {
-      // Non-critical if auto-vote fails, but good to handle
-      console.warn('Auto-vote creation note:', voteErr.message);
+        const { line } = req.query;
+        let query = { status: 'Active' };
+
+        // Optional filtering by line ID
+        if (line) {
+            query.line = line;
+        }
+
+        // Index { status: 1, createdAt: 1 } optimizes active reports feed
+        const reports = await Report.find(query)
+            .populate('line', 'name number')
+            .populate('station', 'name order')
+            .populate('createdBy', 'name')
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: reports.length,
+            reports
+        });
+    } catch (err) {
+        console.error('getReports error:', err);
+        return res.status(500).json({ message: 'Something went wrong. Please try again.' });
     }
-
-    // Populate route details for immediate frontend display
-    const populatedReport = await Report.findById(newReport._id)
-      .populate('routeId', 'code name mode color')
-      .populate('stopId', 'name')
-      .populate('reportedBy', 'displayName');
-
-    res.status(201).json({
-      success: true,
-      message: 'Transit delay reported successfully.',
-      data: populatedReport
-    });
-
-  } catch (err) {
-    console.error('createReport error:', err);
-    res.status(500).json({ message: 'Something went wrong. Please try again.' });
-  }
 };
 
-// ==========================================
-// 3. CAST "STILL HAPPENING" VOTE
-// ==========================================
-exports.voteStillHappening = async (req, res) => {
-  try {
-    const { id: reportId } = req.params;
-    const userId = req.user.id;
+// POST /api/reports - Create a new delay report
+exports.createReport = async (req, res) => {
+    try {
+        const { line, station, description } = req.body;
 
-    // Attempt to create a vote document. 
-    // The unique index { reportId: 1, userId: 1 } blocks duplicate votes at the DB level!
-    await Vote.create({
-      reportId,
-      userId,
-      type: 'still'
-    });
+        if (!line || !station || !description) {
+            return res.status(400).json({ message: 'Line, station, and description are required.' });
+        }
 
-    // If successful, increment votesCount and refresh lastActivityAt
-    const updatedReport = await Report.findByIdAndUpdate(
-      reportId,
-      {
-        $inc: { votesCount: 1 },
-        lastActivityAt: Date.now()
-      },
-      { new: true }
-    ).populate('routeId', 'code name');
+        // Verify that the station actually belongs to the given line per SB-14
+        const validStation = await Station.findOne({ _id: station, line: line });
+        if (!validStation) {
+            return res.status(400).json({ message: 'Selected station does not belong to this line.' });
+        }
 
-    if (!updatedReport) {
-      return res.status(404).json({ message: 'Report not found.' });
+        // Create report: creator counts as the first voter, votes start at 1
+        const report = await Report.create({
+            line,
+            station,
+            description: description.trim(),
+            createdBy: req.user.id,
+            voters: [req.user.id],
+            votes: 1,
+            status: 'Active'
+        });
+
+        const populatedReport = await Report.findById(report._id)
+            .populate('line', 'name number')
+            .populate('station', 'name order')
+            .populate('createdBy', 'name');
+
+        return res.status(201).json({
+            success: true,
+            report: populatedReport
+        });
+    } catch (err) {
+        console.error('createReport error:', err);
+        return res.status(500).json({ message: 'Something went wrong. Please try again.' });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Vote recorded: Still happening.',
-      data: updatedReport
-    });
-
-  } catch (err) {
-    // MongoDB duplicate key error code 11000 means user already voted on this report
-    if (err.code === 11000) {
-      return res.status(400).json({ message: 'You have already voted on this report.' });
-    }
-    console.error('voteStillHappening error:', err);
-    res.status(500).json({ message: 'Something went wrong. Please try again.' });
-  }
 };
 
-// ==========================================
-// 4. RESOLVE A REPORT (Change status)
-// ==========================================
+// PATCH /api/reports/:id/vote - Upvote a report ("Still happening") using atomic SB-14 logic
+exports.voteReport = async (req, res) => {
+    try {
+        const reportId = req.params.id;
+        const userId = req.user.id;
+
+        // Atomic update matching SB-14 spec: adds vote only if user hasn't voted yet and status is Active
+        const result = await Report.updateOne(
+            { _id: reportId, status: 'Active', voters: { $ne: userId } },
+            { $push: { voters: userId }, $inc: { votes: 1 } }
+        );
+
+        if (result.modifiedCount === 0) {
+            return res.status(400).json({ 
+                message: 'Unable to vote. You may have already voted, the report is resolved, or it does not exist.' 
+            });
+        }
+
+        const updatedReport = await Report.findById(reportId)
+            .populate('line', 'name number')
+            .populate('station', 'name order');
+
+        return res.status(200).json({
+            success: true,
+            message: 'Vote recorded successfully',
+            votes: updatedReport.votes
+        });
+    } catch (err) {
+        console.error('voteReport error:', err);
+        return res.status(500).json({ message: 'Something went wrong. Please try again.' });
+    }
+};
+
+// PATCH /api/reports/:id/resolve - Mark a report as resolved (Moderator only or Creator)
 exports.resolveReport = async (req, res) => {
-  try {
-    const { id: reportId } = req.params;
+    try {
+        const reportId = req.params.id;
+        const report = await Report.findById(reportId);
 
-    const report = await Report.findById(reportId);
-    if (!report) {
-      return res.status(404).json({ message: 'Report not found.' });
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found.' });
+        }
+
+        // Check if user is the creator or a moderator
+        if (report.createdBy.toString() !== req.user.id && req.user.role !== 'moderator') {
+            return res.status(403).json({ message: 'Not authorized to resolve this report.' });
+        }
+
+        report.status = 'Resolved';
+        report.resolvedAt = new Date();
+        await report.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Report marked as resolved.',
+            report
+        });
+    } catch (err) {
+        console.error('resolveReport error:', err);
+        return res.status(500).json({ message: 'Something went wrong. Please try again.' });
     }
-
-    // Optional check: Ensure user is the creator or a moderator/admin
-    if (report.reportedBy.toString() !== req.user.id && req.user.role !== 'moderator') {
-      return res.status(403).json({ message: 'Not authorized to resolve this report.' });
-    }
-
-    report.status = 'resolved';
-    report.resolvedAt = Date.now();
-    await report.save();
-
-    res.status(200).json({
-      success: true,
-      message: 'Report marked as resolved.',
-      data: report
-    });
-
-  } catch (err) {
-    console.error('resolveReport error:', err);
-    res.status(500).json({ message: 'Something went wrong. Please try again.' });
-  }
 };
