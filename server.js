@@ -5,8 +5,9 @@ const cors = require('cors');
 
 
 const authRoutes = require('./routes/auth');
-const userRoutes = require ('./routes/user')
+const userRoutes = require('./routes/user')
 const reportRoutes = require('./routes/report');
+const moderatorRoutes = require('./routes/moderator');
 
 // 1. Load environment variables from .env file
 dotenv.config();
@@ -15,19 +16,20 @@ dotenv.config();
 const app = express();
 
 // 2. Middleware
-app.use(express.json()); 
-app.use(cors());         
+app.use(express.json());
+app.use(cors());
 
 // 3. Mount Routes 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/moderators', moderatorRoutes);
 
 // Basic root test route
 app.get('/', (req, res) => {
-  res.status(200).json({ 
-    success: true, 
-    message: 'TTC Commuter Transit Alert API is active and running.' 
+  res.status(200).json({
+    success: true,
+    message: 'TTC Commuter Transit Alert API is active and running.'
   });
 });
 
@@ -38,7 +40,7 @@ const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB successfully...');
-    
+
     // Start Express server only after database connection is verified
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
