@@ -23,7 +23,7 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api/moderators', moderatorRoutes);
+app.use('/api/moderator', moderatorRoutes);
 
 // Basic root test route
 app.get('/', (req, res) => {
