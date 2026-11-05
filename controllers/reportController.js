@@ -134,3 +134,81 @@ exports.resolveReport = async (req, res) => {
         return res.status(500).json({ message: 'Something went wrong. Please try again.' });
     }
 };
+
+// PUT /api/reports/:id - Update an existing report's line, station, or description (Creator or Moderator)
+exports.updateReport = async (req, res) => {
+    try {
+        const { description, line, station } = req.body;
+        const report = await Report.findById(req.params.id);
+
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found.' });
+        }
+
+        // Check if user is the creator or a moderator
+        if (report.createdBy.toString() !== req.user.id && req.user.role !== 'moderator') {
+            return res.status(403).json({ message: 'Not authorized to update this report.' });
+        }
+
+        // Determine target line and station (fall back to existing ones if not provided)
+        const targetLine = line || report.line;
+        const targetStation = station || report.station;
+
+        // If either line or station is being updated, validate their relationship per SB-14 rules
+        if (line || station) {
+            const validStation = await Station.findOne({ _id: targetStation, line: targetLine });
+            if (!validStation) {
+                return res.status(400).json({ message: 'Selected station does not belong to this line.' });
+            }
+            report.line = targetLine;
+            report.station = targetStation;
+        }
+
+        // Update description if provided
+        if (description) {
+            report.description = description.trim();
+        }
+
+        await report.save();
+
+        const updatedReport = await Report.findById(report._id)
+            .populate('line', 'name number')
+            .populate('station', 'name order')
+            .populate('createdBy', 'name');
+
+        return res.status(200).json({
+            success: true,
+            message: 'Report updated successfully',
+            report: updatedReport
+        });
+    } catch (err) {
+        console.error('updateReport error:', err);
+        return res.status(500).json({ message: 'Something went wrong. Please try again.' });
+    }
+};
+
+// DELETE /api/reports/:id - Delete a report (Creator or Moderator)
+exports.deleteReport = async (req, res) => {
+    try {
+        const report = await Report.findById(req.params.id);
+
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found.' });
+        }
+
+        // Check if user is the creator or a moderator
+        if (report.createdBy.toString() !== req.user.id && req.user.role !== 'moderator') {
+            return res.status(403).json({ message: 'Not authorized to delete this report.' });
+        }
+
+        await report.deleteOne();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Report deleted successfully'
+        });
+    } catch (err) {
+        console.error('deleteReport error:', err);
+        return res.status(500).json({ message: 'Something went wrong. Please try again.' });
+    }
+};
