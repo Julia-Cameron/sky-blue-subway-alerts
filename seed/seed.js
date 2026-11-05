@@ -61,7 +61,7 @@ async function seedLinesAndStations() {
 	for (const line of TTC) {
 		const doc = await Line.findOneAndUpdate(
 			{ number: line.number },
-			{ name: line.name, number: line.number },
+			{ name: line.name, number: line.number, route: line.route },
 			{ upsert: true, returnDocument: 'after', runValidators: true }
 		);
 		lineIds[line.number] = doc._id;

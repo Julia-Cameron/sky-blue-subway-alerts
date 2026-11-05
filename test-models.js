@@ -42,6 +42,7 @@ async function main() {
 
 	const line1 = await Line.findOne({ number: 1 });
 	const line2 = await Line.findOne({ number: 2 });
+	check('Line 2 route is Bloor–Danforth', line2.route === 'Bloor–Danforth', `found ${line2.route}`);
 	const line1Stations = await Station.forLine(line1._id);
 	check('Line 1 dropdown starts at Vaughan Metropolitan Centre', line1Stations[0].name === 'Vaughan Metropolitan Centre');
 	check('Line 1 dropdown ends at Finch', line1Stations.at(-1).name === 'Finch');

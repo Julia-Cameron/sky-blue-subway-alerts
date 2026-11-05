@@ -14,6 +14,13 @@ const lineSchema = new mongoose.Schema(
 			type: Number,
 			required: [true, 'Line number is required'],
 			unique: true // e.g. 1
+		},
+		// Route name, for places with room for it, e.g. the dropdown:
+		// "Line 2 Bloor–Danforth". Badges can use just `name`.
+		route: {
+			type: String,
+			required: [true, 'Route name is required'],
+			trim: true // e.g. "Bloor–Danforth"
 		}
 	},
 	{ timestamps: true }

@@ -8,6 +8,7 @@ module.exports = [
 	{
 		number: 1,
 		name: 'Line 1',
+		route: 'Yonge–University',
 		// Vaughan Metropolitan Centre → Union (University/Spadina) → Finch (Yonge)
 		stations: [
 			'Vaughan Metropolitan Centre',
@@ -53,6 +54,7 @@ module.exports = [
 	{
 		number: 2,
 		name: 'Line 2',
+		route: 'Bloor–Danforth',
 		// Kipling → Kennedy
 		stations: [
 			'Kipling',
@@ -91,6 +93,7 @@ module.exports = [
 	{
 		number: 4,
 		name: 'Line 4',
+		route: 'Sheppard',
 		// Sheppard-Yonge → Don Mills
 		stations: [
 			'Sheppard-Yonge',
@@ -103,6 +106,7 @@ module.exports = [
 	{
 		number: 5,
 		name: 'Line 5',
+		route: 'Eglinton',
 		// Mount Dennis → Kennedy
 		stations: [
 			'Mount Dennis',
@@ -135,6 +139,7 @@ module.exports = [
 	{
 		number: 6,
 		name: 'Line 6',
+		route: 'Finch West',
 		// Finch West → Humber College
 		stations: [
 			'Finch West',
