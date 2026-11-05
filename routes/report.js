@@ -7,6 +7,10 @@ router.route('/')
     .get(reportController.getReports)
     .post(protect, reportController.createReport);
 
+router.route('/:id')
+    .put(protect, reportController.updateReport)
+    .delete(protect, reportController.deleteReport);
+
 router.patch('/:id/vote', protect, reportController.voteReport);
 router.patch('/:id/resolve', protect, reportController.resolveReport);
 

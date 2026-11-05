@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user')
 const reportRoutes = require('./routes/report');
 const moderatorRoutes = require('./routes/moderator');
+const transitRoutes = require('./routes/transit')
 
 // 1. Load environment variables from .env file
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/moderator', moderatorRoutes);
+app.use('/api/transit', transitRoutes)
 
 // Basic root test route
 app.get('/', (req, res) => {
