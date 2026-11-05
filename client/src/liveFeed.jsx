@@ -18,18 +18,28 @@ export default function LiveFeed() {
             </div>
             <br></br>
 
-            <Report
-                key={1}
-                line={2}
-                station={"Testing Station 1"}
-                description={"Down"}
+            {/* 
+                THE BELOW WILL BE REPLACED WITH A MAP FUNCTION THAT RENDERS ALL REPORTS FROM THE DATABASE 
+                1. Get and store list of reports from DB with useEffect and useState
+                2. Map through the list and render a Report component for each report
+            */}
+            <Report 
+                title="Delayed at Main Street"
+                description="No service, shuttle busses are running."
+                lineNumber="2"
+                lineStation="Line 2 Bloor - Danforth"
+                date="2024-06-01"
+                userOwnsThis={false}
+                confirmedCount={5}
             />
-
-            <Report
-                key={2}
-                line={1}
-                station={"Testing Station 2"}
-                description={"Delayed"}
+            <Report 
+                title="Signal problem at Bloor-Yonge"
+                description="Signal problem, trains holding at the platform."
+                lineNumber="1"
+                lineStation="Line 1 Yonge - University"
+                date="2024-06-02"
+                userOwnsThis={true}
+                confirmedCount={3}
             />
         
         </div>

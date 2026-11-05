@@ -9,10 +9,6 @@ export default function HeaderNav() {
                 <Link to="/" className="btn secondary">Login</Link> 
                 <Link to="/create-account" className="btn secondary"> Create Account</Link>
                 <Link to="/live-feed" className="btn secondary"> Live Feed</Link> 
-                {/* Temporary }
-                <Link to="/create-report" className="btn secondary"> Create Report</Link>
-                <Link to="/edit-report" className="btn secondary"> Edit Report</Link>
-                */}
                 <Link to="/moderator-view" className="btn secondary"> Moderator View (Temporary)</Link>
             </nav>
         </div>

@@ -2,7 +2,7 @@
 
 :root {
   --bg: #EEF6FF;  --card: #FFFFFF;  --text: #0B2545;  --muted: #5C7391;
-  --p1: #1E90FF;  --p2: #5B8CFF;    --ok: #12B886;    --bad: #F76707;
+  --p1: #1E90FF;  --p2: #5B8CFF;    --ok: #12B886;    --bad: #F76707; --yours: #5a6ef0;
   --line: #D4E4F7;
   --radius: 26px;
   --glow: 0 12px 28px rgba(30,144,255,.40);
@@ -31,11 +31,23 @@ input:focus, select:focus, textarea:focus { border-color: var(--p1); outline: no
 .chip { font: 700 .8rem var(--font-body); padding: 5px 12px; border-radius: 999px;
         color: var(--bad); background: rgba(247,103,7,.16); }
 .chip.ok { color: var(--ok); background: rgba(18,184,134,.16); }
+.chip.yours { color: var(--yours); background: rgba(31,55,214,.16); }
 
 /* Added by Benjamin Oliveria for things not included in the above */
 a { text-decoration: none; color: var(--p1); }
 nav { display: flex; flex-direction: row; gap: 1.5vw; width: fit-content; margin: 0 auto; }
-.line{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font:800 1.15rem var(--font-head);color:#fff;background:linear-gradient(135deg,var(--p1),var(--p2))}
+.line{ 
+       width:42px;
+       height:42px;
+       aspect-ratio:1;
+       flex-shrink:0;
+       border-radius:50%;
+       display:grid;
+       place-items:center;
+       font:800 1.15rem var(--font-head);
+       color:#fff;
+       background:linear-gradient(135deg,var(--p1),var(--p2));
+}
 .line.done{background:var(--line);color:var(--muted)}
 .delete { color: red; border-color: red; background: transparent; }
 .delete:hover { background: rgba(255, 138, 146, 0.14); }
