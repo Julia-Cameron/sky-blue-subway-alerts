@@ -22,9 +22,11 @@ export default function EditReport() {
     };
 
     function handleDeleteReport() {
-        e.preventDefault();
-        // INSERT BACKEND DELETE METHOD HERE
-        navigate("/live-feed");
+        const decision = confirm("Are you sure you want to delete your report?");
+        if (decision) {
+            // INSERT BACKEND DELETE METHOD HERE
+            navigate("/live-feed");
+        }
     }
 
     return (

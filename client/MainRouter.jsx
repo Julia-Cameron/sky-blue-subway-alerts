@@ -7,6 +7,7 @@ import CreateReport from './src/createReport.jsx';
 import EditReport from './src/editReport.jsx';
 import HeaderNav from './components/HeaderNav.jsx';
 import ModeratorView from './src/moderatorView.jsx';
+import Footer from './components/Footer.jsx';
 
 const MainRouter = () => {
     return ( <div>
@@ -19,6 +20,7 @@ const MainRouter = () => {
             <Route path="/edit-report" element={<EditReport />} />
             <Route path="/moderator-view" element={<ModeratorView />} />
         </Routes>
+        <Footer />
     </div>
     );
 };

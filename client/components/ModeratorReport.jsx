@@ -13,7 +13,11 @@ export default function ModeratorReport({ line, station, description }) {
     }
 
     function handleDelete() {
-        setVisible(false);
+        const decision = confirm("Are you sure you want to delete this report?");
+        if (decision) {
+            // INSERT BACKEND DELETE METHOD HERE
+            setVisible(false);
+        }
     }
 
     return (
