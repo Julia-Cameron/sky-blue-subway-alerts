@@ -12,6 +12,10 @@ const lineSchema = new mongoose.Schema({
     required: true,
     unique: true, // 1, 2, 4, 5, 6
   },
+	route: {
+		type: String,
+		trim: true, // e.g., "Bloor–Danforth", so the dropdown can show "Line 2 Bloor–Danforth"
+	},
 });
 
 module.exports = mongoose.model('Line', lineSchema);
