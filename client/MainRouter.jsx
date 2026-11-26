@@ -1,27 +1,32 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Login from './components/Login.jsx';
-import CreateAccount from './src/createAccount.jsx';
-import LiveFeed from './src/liveFeed.jsx';
-import CreateReport from './src/createReport.jsx';
-import EditReport from './src/editReport.jsx';
-import HeaderNav from './components/HeaderNav.jsx';
-import ModeratorView from './src/moderatorView.jsx';
-import Footer from './components/Footer.jsx';
+import Login from './src/pages/login.jsx';
+import CreateAccount from './src/pages/createAccount.jsx';
+import LiveFeed from './src/pages/liveFeed.jsx';
+import CreateReport from './src/pages/createReport.jsx';
+import EditReport from './src/pages/editReport.jsx';
+import HeaderNav from './src/components/HeaderNav.jsx';
+import Footer from './src/components/Footer.jsx';
+import ProtectedRoute from './src/components/ProtectedRoute.jsx';
 
 const MainRouter = () => {
-    return ( <div>
-        <HeaderNav />
-        <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/create-account" element={<CreateAccount />} />
-            <Route path="/live-feed" element={<LiveFeed />} />
-            <Route path="/create-report" element={<CreateReport />} />
-            <Route path="/edit-report" element={<EditReport />} />
-            <Route path="/moderator-view" element={<ModeratorView />} />
-        </Routes>
-        <Footer />
-    </div>
+    return ( 
+        <div style={{backgroundImage: 'url(./public/background.svg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', minHeight: '100vh'}}>
+            <HeaderNav />
+            <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LiveFeed />} />
+                <Route path="/create-account" element={<CreateAccount />} />
+                <Route path="/log-in" element={<Login />} />
+
+                {/* Signed-in User Routes */}
+                <Route path="/create-report" element={<ProtectedRoute><CreateReport /></ProtectedRoute>} />
+                <Route path="/edit-report" element={<ProtectedRoute><EditReport /></ProtectedRoute>} />
+
+                {/* <Route path="/moderator-view" element={<ModeratorView />} /> */}
+            </Routes>
+            <Footer />
+        </div>
     );
 };
 
