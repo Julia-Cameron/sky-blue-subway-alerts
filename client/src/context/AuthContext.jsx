@@ -25,11 +25,21 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(MOCK_USERS.guest);
     }
 
+    const updateUser = (updatedUser) => {
+        setCurrentUser((prev) => ( prev ? { ...prev, ...updatedUser } : null));
+    }
+
+    const deleteAccount = () => {
+        setCurrentUser(MOCK_USERS.guest);
+    }
+
     const value = {
         user: currentUser,
         isAuthenticated: Boolean(currentUser),
         loginAsUser,
-        logout
+        logout,
+        updateUser,
+        deleteAccount
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
