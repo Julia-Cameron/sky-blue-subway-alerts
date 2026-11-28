@@ -9,6 +9,7 @@ const MOCK_USERS = {
         id: '01',
         name: 'John Doe',
         email: 'tmp@gmail.com',
+        password: 'password123',
         role: 'user',
     }
 }

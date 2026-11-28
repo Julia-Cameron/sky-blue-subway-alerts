@@ -21,7 +21,7 @@ export default function LiveFeed() {
                 </Link>
             ) : (
                 <Link to="/log-in">
-                    <button style={{ display: 'block', margin: '16px auto', width: '30vw' }} className='btn secondary'>Sign in to Create Report</button>
+                    <button style={{ display: 'block', margin: '16px auto', width: '30vw' }} className='btn secondary'>Sign-In to Create Report</button>
                 </Link>
             )}
             <br></br>

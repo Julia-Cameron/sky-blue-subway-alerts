@@ -7,10 +7,18 @@ export default function MyProfile({ isOpen, onClose }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
 
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [deleteError, setDeleteError] = useState('');
+
     useEffect(() => {
         if (user && isOpen) {
             setName(user.name);
             setEmail(user.email);
+
+            setIsDeleting(false);
+            setDeletePassword('');
+            setDeleteError('');
         }
     }, [user, isOpen]);
 
@@ -35,12 +43,19 @@ export default function MyProfile({ isOpen, onClose }) {
         onClose();
     }
 
-    function handleDeleteAccount() {
-        const confirmed = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
-        if (confirmed) {
+    function handleConfirmDelete() {
+        if (deletePassword === user.password) {
             deleteAccount();
             onClose();
+        } else {
+            setDeleteError('Incorrect password. Please try again.');
         }
+    }
+
+    function handleCancelDelete() {
+        setIsDeleting(false);
+        setDeletePassword('');
+        setDeleteError('');
     }
 
     return (
@@ -56,8 +71,20 @@ export default function MyProfile({ isOpen, onClose }) {
 
                     <br />
 
-                    <br /><button type="submit" className="btn primary" disabled={!hasChanges}>Confirm Edits</button>
-                    <br /><button type="button" className="btn delete" onClick={handleDeleteAccount}>Delete Account</button>
+                    <br /><button style={{ marginBottom: '10px' }} type="submit" className="btn primary" disabled={!hasChanges}>Confirm Edits</button>
+
+                    {!isDeleting ? (
+                        <button type="button" className="btn delete" onClick={() => setIsDeleting(true)}>Delete Account</button>
+                    ) : (
+                        <>
+                            <label htmlFor="delete-password"><h3>Confirm Password to Delete Your Account</h3></label>
+                            <input style={{ width: '30vw', marginBottom: '10px' }} type="password" id="delete-password" value={deletePassword} onChange={(e) => setDeletePassword(e.target.value)} required />
+                            <br />
+                            {deleteError && <p style={{ color: 'red' }}>{deleteError}</p>}
+                            <button style={{ marginBottom: '10px' }} type="button" className="btn delete" onClick={handleConfirmDelete}>Confirm Delete</button>
+                            <button type="button" className="btn secondary" onClick={handleCancelDelete}>Cancel</button>
+                        </>
+                    )}
                 </form>
             </div>
         </div>

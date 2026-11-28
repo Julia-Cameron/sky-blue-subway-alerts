@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate }  from "react-router-dom";
 
 export default function CreateReport() {
@@ -86,7 +87,7 @@ export default function CreateReport() {
                     <button className="btn primary" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Submit Report</button>
                 </form>
                 {/* Simple cancel button that takes the user back to the live feed page without submitting a report */}
-                <a href="/"><button className="btn secondary" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Cancel</button></a>
+                <Link to="/"><button className="btn secondary" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Cancel</button></Link>
             </div>
 
             {/* Disclaimer about the type of information that should be included in a report */}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function EditReport() {
@@ -69,7 +70,7 @@ export default function EditReport() {
 
                     <button onClick={handleSaveChanges} className="btn primary" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Save Changes</button>
                 </form>
-                <a href="/"><button className="btn secondary" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Cancel Edits</button></a>
+                <Link to="/"><button className="btn secondary" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Cancel Edits</button></Link>
                 {/* Delete button that allows the user to delete the report and return to the live feed page */}
                 <button type="button" onClick={handleDeleteReport} className="btn delete" style={{ display: 'block', margin: '16px auto', width: '30vw' }}>Delete Report</button>
             </div>

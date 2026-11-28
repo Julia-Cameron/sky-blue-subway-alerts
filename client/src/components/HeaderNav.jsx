@@ -55,7 +55,7 @@ export default function HeaderNav() {
                             <button className='btn secondary' style={{ backgroundColor: 'transparent', border: '2px solid #FFFFFF', color: '#FFFFFF' }}>Create an Account</button>
                         </Link>
                         <Link to="/log-in">
-                            <button className='btn secondary' style={{ backgroundColor: 'transparent', border: '2px solid #FFFFFF', color: '#FFFFFF' }}>Sign In</button>
+                            <button className='btn secondary' style={{ backgroundColor: 'transparent', border: '2px solid #FFFFFF', color: '#FFFFFF' }}>Sign-In</button>
                         </Link>
                     </nav>
                 )}
